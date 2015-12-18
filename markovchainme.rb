@@ -18,12 +18,18 @@ class Markovchainme
       "Failed to build a good sentence in time. Life is hard."
     else
       dictionary = set_dictionary(user)
-      sentence = dictionary.generate_n_sentences 1
-      if sentence.length < 140
-        sentence.capitalize
+      if dictionary == "error TooManyRequests"
+        "The rate limit is exceeded. Try again later."
+      elsif dictionary == "error other"
+        "Some error came up when talking to Twitter. Try again later."
       else
-        i += 1
-        self.random_sentence(user, i)
+        sentence = dictionary.generate_n_sentences 1
+        if sentence.length < 140
+          sentence.capitalize
+        else
+          i += 1
+          self.random_sentence(user, i)
+        end
       end
     end
   end
@@ -70,14 +76,20 @@ class Markovchainme
 
   def set_dictionary(user)
     start_client
-    search = @client.search("from:#{user}")
-    tweet_array = search.map{ |tweet| tweet.text }
-    puts "Found #{tweet_array.length} tweets."
-    tweet_array = tweet_array.join(". ")
-    tweets = tweet_array.gsub(/@/, "").gsub(/https:\S+/, "").gsub(/\s+/, " ")
-    dictionary = MarkyMarkov::TemporaryDictionary.new
-    dictionary.parse_string tweets
-    dictionary
+    begin
+      search = @client.search("from:#{user}")
+      tweet_array = search.map{ |tweet| tweet.text }
+      puts "Found #{tweet_array.length} tweets."
+      tweet_array = tweet_array.join(". ")
+      tweets = tweet_array.gsub(/@/, "").gsub(/https:\S+/, "").gsub(/\s+/, " ")
+      dictionary = MarkyMarkov::TemporaryDictionary.new
+      dictionary.parse_string tweets
+      dictionary
+    rescue Twitter::Error::TooManyRequests
+      "error TooManyRequests"
+    rescue 
+      "error other"
+    end
   end
 end
 
