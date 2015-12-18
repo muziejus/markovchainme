@@ -48,7 +48,7 @@ class Markovchainme
 
   def tweet(text, reply_id = nil)
     start_client
-    @client.update(text + " #MLA16", {in_reply_to_status_id: reply_id})
+    @client.update(text, {in_reply_to_status_id: reply_id})
   end
 
   # private 
