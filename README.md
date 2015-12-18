@@ -1,4 +1,4 @@
-# MLArkov
+# MarkovChainMe
 
 MarkovChainMe is a Twitter bot that builds and tweets Markov chains based twitter users you pass it. It is based on my [KarlMarxovChain](https://github.com/muziejus/karlmarxovchain) twitter bot.
 
