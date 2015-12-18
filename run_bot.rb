@@ -1,6 +1,6 @@
-require_relative 'mlarkov'
+require_relative 'markovchainme'
 
-tweet = Mlarkov.new
+tweet = Markovchainme.new
 if ARGV[0] == "random" # Called from the command line to make a random sentence.
   tweet_text = tweet.random_sentence
   tweet.tweet(tweet_text)
@@ -12,7 +12,10 @@ else # must a cron job, looking for @s.
   tweet.replies.each do |reply|
     reply_ids.push(reply.id)
     puts "reply: #{reply.id} - #{reply.text}"
-    tweet_text = "@" + reply.user.screen_name + " " + tweet.random_sentence
+    match = /^.*@MarkovChainMe:* do @(\w*).*$/i.match(reply.text)
+    match.nil? ? user = "No term detected" : user = match[1]
+    tweet_text = tweet.random_sentence(user)
+    tweet_text = "@" + reply.user.screen_name + " " + tweet_text
     puts tweet_text
     tweet.tweet(tweet_text, reply.id)
   end
