@@ -25,7 +25,7 @@ class Markovchainme
       else
         sentence = dictionary.generate_n_sentences 1
         if sentence.length < 140
-          sentence.capitalize
+          sentence.capitalize.gsub("&amp;", "&")
         else
           i += 1
           self.random_sentence(user, i)
