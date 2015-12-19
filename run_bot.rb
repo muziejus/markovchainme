@@ -13,7 +13,7 @@ else # must a cron job, looking for @s.
     reply_ids.push(reply.id)
     puts "reply: #{reply.id} - #{reply.text}"
     match = /^.*@MarkovChainMe:* do @(\w*).*$/i.match(reply.text)
-    match.nil? ? user = "No term detected" : user = match[1]
+    match.nil? ? user = reply.user.screen_name : user = match[1]
     tweet_text = tweet.random_sentence(user)
     tweet_text = "@" + reply.user.screen_name + " " + tweet_text
     puts tweet_text
