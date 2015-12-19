@@ -23,13 +23,11 @@ class Markovchainme
       elsif dictionary == "error other"
         "Some error came up when talking to Twitter. Try again later."
       else
-        sentence = dictionary.generate_n_sentences 1
-        if sentence.length < 140
-          sentence.capitalize.gsub("&amp;", "&")
-        else
-          i += 1
-          self.random_sentence(user, i)
+        sentence = dictionary.generate_n_words(100).capitalize.gsub("&amp;", "&").gsub(/$/, ".")
+        unless sentence.length < 120
+          sentence = sentence[0...119].gsub(/ \S*$/, ".")
         end
+        sentence
       end
     end
   end
